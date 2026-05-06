@@ -1,0 +1,79 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-spotify-project-sk"
+		},
+		"ls_adf_adls_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ls_adf_adls'"
+		},
+		"ls_azsql_adf_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_azsql_adf'"
+		},
+		"ls_adf_adls_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://storagespotifyprojectsk.dfs.core.windows.net/"
+		},
+		"ls_azsql_adf_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sqlserversaif.database.windows.net"
+		},
+		"ls_azsql_adf_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqlspotify"
+		},
+		"ls_azsql_adf_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "adminserver"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_adf_adls')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ls_adf_adls_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ls_adf_adls_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ls_azsql_adf')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('ls_azsql_adf_properties_typeProperties_server')]",
+					"database": "[parameters('ls_azsql_adf_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('ls_azsql_adf_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('ls_azsql_adf_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
