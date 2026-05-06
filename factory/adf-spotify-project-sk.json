@@ -1,0 +1,15 @@
+{
+	"name": "adf-spotify-project-sk",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "64855577-7e75-4da8-a98b-8772434defb8",
+		"tenantId": "d397bbc1-1699-461e-be34-78cf0d88b815"
+	}
+}
