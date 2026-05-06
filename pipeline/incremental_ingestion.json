@@ -1,0 +1,115 @@
+{
+	"name": "incremental_ingestion",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopySQLtoADLS",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "lookupcdc",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM @{pipeline().parameters.p_schema}.@{pipeline().parameters.p_table}\nWHERE @{pipeline().parameters.p_cdc_col} > '@{activity('lookupcdc').output.value[0].cdc}'\n",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_sqldb_src",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_parquet_dynamic",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "lookupcdc",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_cdc_adls",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_container": "bronze",
+							"p_folder": "cdc",
+							"p_file": "lastload.json"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"p_schema": {
+				"type": "string"
+			},
+			"p_table": {
+				"type": "string"
+			},
+			"p_cdc_col": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}
