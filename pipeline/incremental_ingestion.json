@@ -11,6 +11,12 @@
 						"dependencyConditions": [
 							"Succeeded"
 						]
+					},
+					{
+						"activity": "setcurrts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
 					}
 				],
 				"policy": {
@@ -59,7 +65,15 @@
 				"outputs": [
 					{
 						"referenceName": "ds_adls_parquet_dynamic",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"p_container": "bronze",
+							"P_folder": "Users",
+							"p_file": {
+								"value": "@concat(pipeline().parameters.p_table,'_',variables('current_ts'))",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -95,6 +109,24 @@
 							"p_folder": "cdc",
 							"p_file": "lastload.json"
 						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "setcurrts",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "current_ts",
+					"value": {
+						"value": "@utcNow()",
+						"type": "Expression"
 					}
 				}
 			}
@@ -108,6 +140,11 @@
 			},
 			"p_cdc_col": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"current_ts": {
+				"type": "String"
 			}
 		},
 		"annotations": []
