@@ -180,11 +180,11 @@
 												"parameters": {
 													"p_container": "bronze",
 													"P_folder": {
-														"value": "@pipeline().parameters.p_table",
+														"value": "@item().table",
 														"type": "Expression"
 													},
 													"p_file": {
-														"value": "@concat(pipeline().parameters.p_table,'_',variables('current_ts'))",
+														"value": "@concat(item().table,'_',variables('current_ts'))",
 														"type": "Expression"
 													}
 												}
