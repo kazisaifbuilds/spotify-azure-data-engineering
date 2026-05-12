@@ -11,9 +11,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adf_adls'"
 		},
-		"ls_azsql_adf_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'ls_azsql_adf'"
+		"ls_AzureKeyVault_sql_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azkeyvaultsk.vault.azure.net/"
 		},
 		"ls_adf_adls_properties_typeProperties_url": {
 			"type": "string",
@@ -26,10 +26,6 @@
 		"ls_azsql_adf_properties_typeProperties_database": {
 			"type": "string",
 			"defaultValue": "azuresqlspotify"
-		},
-		"ls_azsql_adf_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "adminserver"
 		},
 		"containerUri": {
 			"type": "string",
@@ -61,8 +57,8 @@
 					"ls_adf_adls_accountKey": {
 						"value": "[parameters('ls_adf_adls_accountKey')]"
 					},
-					"ls_azsql_adf_password": {
-						"value": "[parameters('ls_azsql_adf_password')]"
+					"ls_AzureKeyVault_sql_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ls_AzureKeyVault_sql_properties_typeProperties_baseUrl')]"
 					},
 					"ls_adf_adls_properties_typeProperties_url": {
 						"value": "[parameters('ls_adf_adls_properties_typeProperties_url')]"
@@ -72,9 +68,6 @@
 					},
 					"ls_azsql_adf_properties_typeProperties_database": {
 						"value": "[parameters('ls_azsql_adf_properties_typeProperties_database')]"
-					},
-					"ls_azsql_adf_properties_typeProperties_userName": {
-						"value": "[parameters('ls_azsql_adf_properties_typeProperties_userName')]"
 					}
 				}
 			},
