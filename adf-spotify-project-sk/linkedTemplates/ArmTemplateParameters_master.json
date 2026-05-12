@@ -8,9 +8,6 @@
 		"ls_adf_adls_accountKey": {
 			"value": ""
 		},
-		"ls_AzureKeyVault_sql_properties_typeProperties_baseUrl": {
-			"value": "https://azkeyvaultsk.vault.azure.net/"
-		},
 		"ls_adf_adls_properties_typeProperties_url": {
 			"value": "https://storagespotifyprojectsk.dfs.core.windows.net/"
 		},

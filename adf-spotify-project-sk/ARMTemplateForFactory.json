@@ -11,10 +11,6 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'ls_adf_adls'"
 		},
-		"ls_AzureKeyVault_sql_properties_typeProperties_baseUrl": {
-			"type": "string",
-			"defaultValue": "https://azkeyvaultsk.vault.azure.net/"
-		},
 		"ls_adf_adls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://storagespotifyprojectsk.dfs.core.windows.net/"
@@ -887,19 +883,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ls_azsql_adf')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/ls_AzureKeyVault_sql')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureKeyVault",
-				"typeProperties": {
-					"baseUrl": "[parameters('ls_AzureKeyVault_sql_properties_typeProperties_baseUrl')]"
-				}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/ls_adf_adls')]",
