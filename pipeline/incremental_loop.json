@@ -8,6 +8,11 @@
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.loop_input",
+						"type": "Expression"
+					},
+					"isSequential": true,
 					"activities": [
 						{
 							"name": "CopySQLtoADLS",
@@ -256,7 +261,10 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"p_container": "bronze",
-													"p_folder": "cdc",
+													"p_folder": {
+														"value": "@{item().table}_cdc",
+														"type": "Expression"
+													},
 													"p_file": "empty.json"
 												}
 											}
@@ -309,6 +317,37 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "alerts",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Failed",
+							"Skipped",
+							"Succeeded",
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-16.westindia.logic.azure.com:443/workflows/f8bbf1ae19ce4a488c1228172172249c/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=OqEqw1PmrQ9q-3qucag6iMpSDjzQM6sgl3romal-HEg",
+					"body": {
+						"value": "{\n\"pipeline_name\":\"@{pipeline().Pipeline}\",\n\"pipeline_runId\":\"@{pipeline().RunId}\"\n\n}",
+						"type": "Expression"
+					}
 				}
 			}
 		],
